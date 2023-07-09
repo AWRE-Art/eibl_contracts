@@ -1,0 +1,43 @@
+{
+  "name": "eibl-contracts",
+  "author": "",
+  "license": "ISC",
+  "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.",
+  "version": "1.0.0",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "chain": "npx hardhat node",
+    "compile": "npx hardhat compile",
+    "deploy-ed": "npx hardhat run scripts/01-deploy_and_reserve_ed_art.js --network localhost",
+    "deploy-ed-goerli": "npx hardhat run scripts/01-deploy_and_reserve_ed_art.js --network goerli",
+    "deploy-ed-sepolia": "npx hardhat run scripts/01-deploy_and_reserve_ed_art.js --network sepolia",
+    "deploy-ed-mumbai": "npx hardhat run scripts/01-deploy_and_reserve_ed_art.js --network mumbai",
+    "verify": "npx hardhat verify --network goerli <contract-address> <constructor-args>",
+    "verify-ed-mumbai": "npx hardhat verify --network mumbai 0xAfc98af1Ca82da8f832b96e29dF6e385154367c7",
+    "graph-init": "graph init --product hosted-service giorgio-villani/awre-art",
+    "graph-create": "graph create --node https://api.thegraph.com/index-node/graphql --network matic giorgio-villani/awre-art",
+    "graph-deploy": "graph deploy --debug --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ my-subgraph"
+  },
+  "mocha": {
+    "timeout": 10000
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
+    "chai": "^4.3.7",
+    "hardhat": "^2.13.0",
+    "hardhat-deploy": "^0.11.30",
+    "prettier": "^3.0.0"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.5",
+    "@openzeppelin/contracts": "^4.8.2",
+    "dotenv": "^16.1.4",
+    "ipfs-http-client": "^60.0.1"
+  }
+}
