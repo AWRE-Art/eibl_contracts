@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -14,6 +13,9 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     address payable public immutable shareholderAddress;
     
     uint256 public cost;
+    uint256 public maxTokenSupply;
+    uint256 public maxTokenPurchase;
+
     mapping(uint256 => bool) private _redeemed;
 
     event Mint(address indexed to, uint256 indexed tokenId);
@@ -22,11 +24,13 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     event Burn(address indexed to, uint256 indexed tokenId);
     event Withdraw(address indexed to);
 
-    constructor(address payable shareholderAddress_, string memory baseURI_, uint256 cost_) ERC721("Ed in Between Lines", "EdArt") {
+    constructor(address payable shareholderAddress_, string memory baseURI_, uint256 cost_, uint256 maxSupply, uint256 maxPurchase) ERC721("Ed in Between Lines", "EdArt") {
         require(shareholderAddress_ != address(0));
         shareholderAddress = shareholderAddress_;
         _baseURIextended = baseURI_;
         cost = cost_;
+        maxTokenSupply = maxSupply;
+        maxTokenPurchase = maxPurchase;
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize) internal override(ERC721, ERC721Enumerable) {
@@ -50,8 +54,8 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     }
 
     function reserve() public onlyOwner {
-        uint supply = totalSupply();
-        uint i;
+        uint256 supply = totalSupply();
+        uint256 i;
         for (i = 0; i < 40; i++) {
             _safeMint(msg.sender, supply + i);
         }
@@ -61,15 +65,15 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
         saleIsActive = newState;
     }
 
-    function mint(uint numberOfTokens) public payable {
+    function mint(uint256 numberOfTokens) public payable {
         require(saleIsActive, "Sale must be active to mint Tokens");
-        require(numberOfTokens <= 10, "Exceeded max token purchase");
-        require(totalSupply() + numberOfTokens <= 341, "Purchase would exceed max supply of tokens");
+        require(numberOfTokens <= maxTokenPurchase, "Exceeded max token purchase");
+        require(totalSupply() + numberOfTokens <= maxTokenSupply, "Purchase would exceed max supply of tokens");
         require(cost * numberOfTokens <= msg.value, "Ether value sent is not correct");
 
-        for(uint i = 0; i < numberOfTokens; i++) {
-            uint mintIndex = totalSupply();
-            if (totalSupply() < 341) {
+        for(uint256 i = 0; i < numberOfTokens; i++) {
+            uint256 mintIndex = totalSupply();
+            if (totalSupply() < maxTokenSupply) {
                 _safeMint(msg.sender, mintIndex);
                 emit Mint(msg.sender, mintIndex);
             }

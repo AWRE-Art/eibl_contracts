@@ -17,7 +17,9 @@ async function main() {
   const edArt = await EdArt.deploy(
     "0xd17f0237BfeCB3eFCEE4c94637dd0924680694C3",
     "ipfs://bafybeihbgged3ui7lu4apft24api2bgjmd2hwtpi5i7uusw54bhzt5mlua/",
-    "69000000000000000"
+    "69000000000000000",
+    "341",
+    "10"
   );
 
   console.log(`${"EdArt deployed to:".padEnd(40, "-")} ${edArt.address}`);
