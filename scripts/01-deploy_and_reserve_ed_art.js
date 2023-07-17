@@ -1,6 +1,9 @@
 const { ethers } = require("hardhat");
 const hardhat = require("hardhat");
 const { createDeploymentFile } = require("./utils/createDeploymentFile");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 async function main() {
   // Retrieve the network configuration from the hardhat.config.js file
@@ -15,11 +18,11 @@ async function main() {
   // Deploy the contract with constructor arguments
   const EdArt = await ethers.getContractFactory("EdArt");
   const edArt = await EdArt.deploy(
-    "0xd17f0237BfeCB3eFCEE4c94637dd0924680694C3",
-    "ipfs://bafybeihbgged3ui7lu4apft24api2bgjmd2hwtpi5i7uusw54bhzt5mlua/",
-    "69000000000000000",
-    "341",
-    "10"
+    process.env.OWNER,
+    process.env.BASE_URI,
+    process.env.COST,
+    process.env.MAX_TOKEN_SUPPLY,
+    process.env.MAX_TOKEN_PURCHASE
   );
 
   console.log(`${"EdArt deployed to:".padEnd(40, "-")} ${edArt.address}`);

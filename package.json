@@ -11,6 +11,7 @@
   "scripts": {
     "test": "mocha",
     "chain": "npx hardhat node",
+    "console": "npx hardhat console --network localhost",
     "compile": "npx hardhat compile",
     "deploy-ed": "npx hardhat run scripts/01-deploy_and_reserve_ed_art.js --network localhost",
     "deploy-ed-goerli": "npx hardhat run scripts/01-deploy_and_reserve_ed_art.js --network goerli",

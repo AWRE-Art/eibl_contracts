@@ -56,7 +56,7 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     function reserve() public onlyOwner {
         uint256 supply = totalSupply();
         uint256 i;
-        for (i = 0; i < 40; i++) {
+        for (i = 0; i < 41; i++) {
             _safeMint(msg.sender, supply + i);
         }
     }

@@ -9,11 +9,6 @@ require("dotenv").config({ path: "../../../../.env" });
 
 module.exports = {
   networks: {
-    hardhat: {
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
-    },
     goerli: {
       url: `${process.env.INFURA_GOERLI_URL}${process.env.INFURA_API_KEY}`,
       accounts: {
