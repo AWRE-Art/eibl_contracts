@@ -12,17 +12,26 @@ describe("EdArt", () => {
   let deployer, minter;
   let edArt;
 
-  const OWNER = process.env.OWNER;
   const BASE_URI = process.env.BASE_URI;
-  const COST = tokens(process.env.COST);
+  const COST = process.env.COST;
+  const purchase_quantity = 10;
 
   beforeEach(async () => {
     // Setup accounts
     [deployer, minter] = await ethers.getSigners();
 
+    // constructor arguments
+    const arguments = [
+      deployer.address,
+      process.env.BASE_URI,
+      process.env.COST,
+      process.env.MAX_TOKEN_SUPPLY,
+      process.env.MAX_TOKEN_PURCHASE,
+    ];
+
     // Deploy the contract with constructor arguments
     const EdArt = await ethers.getContractFactory("EdArt");
-    edArt = await EdArt.deploy(OWNER, BASE_URI, COST);
+    edArt = await EdArt.deploy(...arguments);
 
     // reserve
     const transaction_reserve = await edArt.connect(deployer).reserve();
@@ -33,7 +42,9 @@ describe("EdArt", () => {
     await transaction_sale_state.wait();
 
     // mint
-    const transaction_mint = await edArt.connect(minter).mint(1, { value: tokens(0.069) });
+    const transaction_mint = await edArt
+      .connect(minter)
+      .mint(purchase_quantity, { value: tokens(0.069 * purchase_quantity) });
     await transaction_mint.wait();
   });
 
@@ -67,7 +78,7 @@ describe("EdArt", () => {
 
     it("Updates total supply", async () => {
       const result = await edArt.totalSupply();
-      expect(result).to.be.equal("41");
+      expect(result).to.be.equal("51");
     });
   });
 
@@ -114,7 +125,8 @@ describe("EdArt", () => {
 
     it("Updates the contract balance", async () => {
       const result = await ethers.provider.getBalance(edArt.address);
-      expect(result).to.equal(0);
+      const result_float = parseFloat(ethers.utils.formatEther(result));
+      expect(result_float).to.equal(0);
     });
   });
 });

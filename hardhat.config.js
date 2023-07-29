@@ -2,13 +2,16 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
-
-require("dotenv").config({ path: "../../../../.env" });
-
-// console.log(`${process.env.INFURA_GOERLI_URL}${process.env.INFURA_API_KEY}`);
+require("dotenv").config();
 
 module.exports = {
   networks: {
+    mainnet: {
+      url: `${process.env.INFURA_MAINNET_URL}${process.env.INFURA_API_KEY}`,
+      accounts: {
+        mnemonic: process.env.MNEMONIC,
+      },
+    },
     goerli: {
       url: `${process.env.INFURA_GOERLI_URL}${process.env.INFURA_API_KEY}`,
       accounts: {

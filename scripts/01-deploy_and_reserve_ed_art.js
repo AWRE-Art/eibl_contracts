@@ -16,14 +16,24 @@ async function main() {
   console.log(`${"Deploying contracts with the account:".padEnd(40, "-")} ${deployer.address}`);
 
   // Deploy the contract with constructor arguments
-  const EdArt = await ethers.getContractFactory("EdArt");
-  const edArt = await EdArt.deploy(
+  const arguments = [
     process.env.OWNER,
     process.env.BASE_URI,
     process.env.COST,
     process.env.MAX_TOKEN_SUPPLY,
-    process.env.MAX_TOKEN_PURCHASE
-  );
+    process.env.MAX_TOKEN_PURCHASE,
+    process.env.RESERVE,
+  ];
+
+  console.log(arguments);
+
+  const EdArt = await ethers.getContractFactory("EdArt");
+  const edArt = await EdArt.deploy(...arguments);
+
+  // Wait for the deployment transaction to be mined and get the transaction receipt
+  const deploymentReceipt = await edArt.deployTransaction.wait();
+  const actualGasSpent = deploymentReceipt.gasUsed;
+  console.log(`${"Actual gas spent:".padEnd(40, "-")} ${actualGasSpent.toString()}`);
 
   console.log(`${"EdArt deployed to:".padEnd(40, "-")} ${edArt.address}`);
 

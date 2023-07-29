@@ -15,6 +15,7 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     uint256 public cost;
     uint256 public maxTokenSupply;
     uint256 public maxTokenPurchase;
+    uint256 public reserveAmount;
 
     mapping(uint256 => bool) private _redeemed;
 
@@ -23,14 +24,15 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     event Reserve(address indexed to);
     event Burn(address indexed to, uint256 indexed tokenId);
     event Withdraw(address indexed to);
-
-    constructor(address payable shareholderAddress_, string memory baseURI_, uint256 cost_, uint256 maxSupply, uint256 maxPurchase) ERC721("Ed in Between Lines", "EdArt") {
+    
+    constructor(address payable shareholderAddress_, string memory baseURI_, uint256 cost_, uint256 maxSupply, uint256 maxPurchase, uint256 reserveAmount_) ERC721("Ed in Between Lines", "EdArt") {
         require(shareholderAddress_ != address(0));
         shareholderAddress = shareholderAddress_;
         _baseURIextended = baseURI_;
         cost = cost_;
         maxTokenSupply = maxSupply;
         maxTokenPurchase = maxPurchase;
+        reserveAmount = reserveAmount_;
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize) internal override(ERC721, ERC721Enumerable) {
@@ -56,7 +58,7 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     function reserve() public onlyOwner {
         uint256 supply = totalSupply();
         uint256 i;
-        for (i = 0; i < 41; i++) {
+        for (i = 0; i < reserveAmount; i++) {
             _safeMint(msg.sender, supply + i);
         }
     }
@@ -94,9 +96,8 @@ contract EdArt is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
         emit Burn(msg.sender, tokenId);
     }
 
-    function redeem(uint256 tokenId) public {
+    function redeem(uint256 tokenId) public onlyOwner {
         require(_exists(tokenId), "Token does not exist");
-        require(ownerOf(tokenId) == msg.sender, "Only the owner of the token can redeem it");
         require(!_redeemed[tokenId], "Token has already been redeemed");
         _redeemed[tokenId] = true; // Set redeemed flag to true
         emit Redeem(msg.sender, tokenId);
